@@ -36,7 +36,7 @@ func handleUpdate(update tgbotapi.Update) {
 		// private message, handle various messages
 		handleTelegramMessage(update.Message.Text, int64(update.Message.From.ID), update.Message.From.UserName)
 	} else if update.CallbackQuery != nil {
-		log.Println("got callback query with message:")
+		debugPrint("received a callback query from " + update.CallbackQuery.From.UserName)
 		handleTelegramMessage(update.CallbackQuery.Data, int64(update.CallbackQuery.From.ID), update.CallbackQuery.From.UserName)
 	}
 }
