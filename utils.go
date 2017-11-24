@@ -38,9 +38,9 @@ func checkIfHasParameter(message []string, chatid int, funcname string) error {
 	if len(message) < 2 {
 		var strmsg string
 		switch funcname {
-		case "/deny", "/allow":
+		case "deny", "allow":
 			strmsg = fmt.Sprintf("Missing username!\nSyntax: `/%s username`\n", funcname)
-		case "/addcode":
+		case "addcode":
 			strmsg = fmt.Sprintf("Missing username!\nSyntax: `/%s refcode`\n", funcname)
 		}
 		tgMessage := tgbotapi.NewMessage(chatid64, strmsg)
