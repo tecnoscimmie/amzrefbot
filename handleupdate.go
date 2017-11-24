@@ -25,8 +25,8 @@ func handleUpdate(update tgbotapi.Update) {
 			currentUser, err := refs.GetUserByID(int64(update.InlineQuery.From.ID))
 			if err == nil { // user is present in the database
 				val, _ := refs.GenAffiliateWithRefcode(inputMsg, currentUser.Code)
-				happyString := fmt.Sprintf("This is my reflink -> %s\n", val)
-				personalArticle := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID+"-personal", SuccessTitle, happyString)
+				personalString := fmt.Sprintf("This is my reflink -> %s\n", val)
+				personalArticle := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID+"-personal", PersonalTitle, personalString)
 				personalArticle.Description = val
 				payloads = append(payloads, personalArticle)
 			}
@@ -35,7 +35,7 @@ func handleUpdate(update tgbotapi.Update) {
 				InlineQueryID: update.InlineQuery.ID,
 				IsPersonal:    true,
 				CacheTime:     0,
-				Results:       []interface{}{okArticle},
+				Results:       payloads,
 			}
 
 			if _, err := botInstance.AnswerInlineQuery(inlineConf); err != nil {

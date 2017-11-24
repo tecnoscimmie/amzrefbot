@@ -4,6 +4,9 @@ const (
 	// SuccessTitle is a generic success message for inline replies
 	SuccessTitle = "Here's your reflink!"
 
+	// PersonalTitle is a success message for personal reflinks
+	PersonalTitle = "Personal reflink"
+
 	// AlreadySent is an already sent request
 	AlreadySent = "You already sent this request."
 
