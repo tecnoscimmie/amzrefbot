@@ -2,7 +2,9 @@ package main
 
 import (
 	"errors"
+	"log"
 	"math/rand"
+	"net/http"
 	"net/url"
 	"strings"
 	"time"
@@ -15,8 +17,18 @@ func (r Refs) GenAffiliate(inputURL string) (string, string, error) {
 		return "", "", err
 	}
 
-	if u.Host != "www.amazon.it" {
+	// amzn.to is the amazon mobile short link, example: http://amzn.to/2A66tBg
+	if u.Host != "www.amazon.it" && u.Host != "amzn.to" {
 		return "", "", errors.New("this is not an amazon.it link")
+	}
+
+	if u.Host == "amzn.to" {
+		u, err = followShortURL(u)
+		if err != nil {
+			// log the real error, then return a generic one
+			log.Println(err)
+			return "", "", errors.New("this is not an amazon.it link")
+		}
 	}
 
 	randomInt := getRandomIntMax(len(r.ReferralCodes))
@@ -33,6 +45,18 @@ func (r Refs) GenAffiliate(inputURL string) (string, string, error) {
 	u.RawQuery = q.Encode()
 
 	return u.String(), randomUser, nil
+}
+
+// followShortURL follows a amazon short link, and retrieves the full one.
+func followShortURL(amznURL *url.URL) (newURL *url.URL, err error) {
+	var data *http.Response
+	data, err = http.Get(amznURL.String())
+	if err != nil {
+		return
+	}
+
+	newURL = data.Request.URL
+	return
 }
 
 // generateNewPath generates a new URL path from the given Amazon.it URL.
