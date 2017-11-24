@@ -17,7 +17,7 @@ import "github.com/go-telegram-bot-api/telegram-bot-api"
 // AddCode adds a refcode to the pending user list.
 func (r *Refs) AddCode(username string, refcode string, chatid int64) {
 	// check if the user is already in the database
-	if r.AlreadyGotUser(username, chatid) {
+	if r.AlreadyGotUser(chatid) {
 		// send message to the user
 		message := tgbotapi.NewMessage(chatid, AlreadySent)
 		_, err := botInstance.Send(message)

@@ -163,7 +163,7 @@ func (r Refs) GetUserByID(id int64) (user ReferralCode, err error) {
 }
 
 // AlreadyGotUser checks if the user is already either in the pending list or on the reflist
-func (r Refs) AlreadyGotUser(username string, id int64) bool {
+func (r Refs) AlreadyGotUser(id int64) bool {
 	_, errID := r.GetUserByID(id)
 	_, errPendingID := r.GetPendingUserByID(id)
 
