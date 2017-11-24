@@ -34,12 +34,12 @@ func (r *Refs) AddCode(username string, refcode string, chatid int64) {
 	)
 
 	message := tgbotapi.NewMessage(chatid, ApproveOrDeny)
-	message.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(t)
 	_, err := botInstance.Send(message)
 	checkError(err)
 
 	// send message to the administrators
 	message = tgbotapi.NewMessage(userAdministrator, GetAdminAddNotify(username))
+	message.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(t)
 	_, err = botInstance.Send(message)
 	checkError(err)
 }
