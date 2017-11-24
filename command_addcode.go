@@ -28,7 +28,12 @@ func (r *Refs) AddCode(username string, refcode string, chatid int64) {
 	r.PendingUsers = append(r.PendingUsers, ReferralCode{AssociatedUser: username, Code: refcode, ChatID: chatid})
 
 	// send message to the user
+	t := tgbotapi.NewInlineKeyboardRow(
+		tgbotapi.NewInlineKeyboardButtonData("Allow @"+username, "/allow "+username),
+		tgbotapi.NewInlineKeyboardButtonData("Deny @"+username, "/deny "+username),
+	)
 	message := tgbotapi.NewMessage(chatid, ApproveOrDeny)
+	message.ReplyMarkup = t
 	_, err := botInstance.Send(message)
 	checkError(err)
 
