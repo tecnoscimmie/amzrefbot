@@ -36,7 +36,14 @@ func checkIfAdministrator(chatid int) error {
 func checkIfHasParameter(message []string, chatid int, funcname string) error {
 	chatid64 := int64(chatid)
 	if len(message) < 2 {
-		tgMessage := tgbotapi.NewMessage(chatid64, fmt.Sprintf("Missing username!\nSyntax: `/%s username`\n", funcname))
+		var strmsg string
+		switch funcname {
+		case "/deny", "/allow":
+			strmsg = fmt.Sprintf("Missing username!\nSyntax: `/%s username`\n", funcname)
+		case "/addcode":
+			strmsg = fmt.Sprintf("Missing username!\nSyntax: `/%s refcode`\n", funcname)
+		}
+		tgMessage := tgbotapi.NewMessage(chatid64, strmsg)
 		tgMessage.ParseMode = tgbotapi.ModeMarkdown
 		_, err := botInstance.Send(tgMessage)
 		checkError(err)
