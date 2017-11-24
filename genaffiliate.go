@@ -59,6 +59,39 @@ func followShortURL(amznURL *url.URL) (newURL *url.URL, err error) {
 	return
 }
 
+// GenAffiliateWithRefcode generates a reflink for the given url, and refcode.
+func (r Refs) GenAffiliateWithRefcode(inputURL string, refcode string) (string, error) {
+	u, err := url.Parse(inputURL)
+	if err != nil {
+		return "", err
+	}
+
+	// amzn.to is the amazon mobile short link, example: http://amzn.to/2A66tBg
+	if u.Host != "www.amazon.it" && u.Host != "amzn.to" {
+		return "", errors.New("this is not an amazon.it link")
+	}
+
+	if u.Host == "amzn.to" {
+		u, err = followShortURL(u)
+		if err != nil {
+			// log the real error, then return a generic one
+			log.Println(err)
+			return "", errors.New("this is not an amazon.it link")
+		}
+	}
+
+	newPath, err := generateNewPath(u.Path)
+	if err != nil {
+		return "", errors.New("cannot generate path url for " + inputURL + " because: " + err.Error())
+	}
+	u.Path = newPath
+	q := url.Values{}
+	q.Set("tag", refcode)
+	u.RawQuery = q.Encode()
+
+	return u.String(), nil
+}
+
 // generateNewPath generates a new URL path from the given Amazon.it URL.
 // Amazon.it URLs contain the product SKU in the URL path itself, so we
 // iterate through it, and as soon as we find the "product" or "dp" strings,

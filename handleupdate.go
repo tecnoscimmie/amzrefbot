@@ -16,9 +16,20 @@ func handleUpdate(update tgbotapi.Update) {
 		// inline query, check for amazon.* urls, get a random refcode and build the url
 		val, user, err := refs.GenAffiliate(inputMsg)
 		if !(err != nil || len(refs.ReferralCodes) < 0) {
+			payloads := []interface{}{}
 			happyString := fmt.Sprintf("The lucky winner is is @%s!\nHere's the reflink: %s\n", user, val)
 			okArticle := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID+"-ok", SuccessTitle, happyString)
 			okArticle.Description = val
+			payloads = append(payloads, okArticle)
+
+			currentUser, err := refs.GetUserByID(int64(update.InlineQuery.From.ID))
+			if err == nil { // user is present in the database
+				val, _ := refs.GenAffiliateWithRefcode(inputMsg, currentUser.Code)
+				happyString := fmt.Sprintf("This is my reflink -> %s\n", val)
+				personalArticle := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID+"-personal", SuccessTitle, happyString)
+				personalArticle.Description = val
+				payloads = append(payloads, personalArticle)
+			}
 
 			inlineConf := tgbotapi.InlineConfig{
 				InlineQueryID: update.InlineQuery.ID,
