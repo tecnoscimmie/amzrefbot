@@ -32,8 +32,9 @@ func (r *Refs) AddCode(username string, refcode string, chatid int64) {
 		tgbotapi.NewInlineKeyboardButtonData("Allow @"+username, "/allow "+username),
 		tgbotapi.NewInlineKeyboardButtonData("Deny @"+username, "/deny "+username),
 	)
+
 	message := tgbotapi.NewMessage(chatid, ApproveOrDeny)
-	message.ReplyMarkup = t
+	message.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(t)
 	_, err := botInstance.Send(message)
 	checkError(err)
 
