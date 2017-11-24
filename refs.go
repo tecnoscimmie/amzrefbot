@@ -151,7 +151,7 @@ func (r Refs) GetUserByUsername(username string) (user ReferralCode, err error) 
 
 // GetUserByID returns a pending user by its id.
 func (r Refs) GetUserByID(id int64) (user ReferralCode, err error) {
-	for _, ruser := range r.PendingUsers {
+	for _, ruser := range r.ReferralCodes {
 		if ruser.ChatID == id {
 			user = ruser
 			return
