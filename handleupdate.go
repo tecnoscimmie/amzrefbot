@@ -68,6 +68,8 @@ func handleUpdate(update tgbotapi.Update) {
 			debugPrint("called handleDefault()")
 			handleDefault(int64(update.Message.From.ID))
 		}
+	} else if update.CallbackQuery != nil {
+		log.Println("got callback query with message:", update.CallbackQuery.Message.Text)
 	}
 }
 
